@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pimm"
+version = "0.1.0"
+description = "Pod Instance Matching Module -- multi-frame 3D instance matching and tracking via symmetric point-cloud overlap"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "Ashish Reddy", email = "ashishr@udel.edu"}
+]
+dependencies = [
+    "numpy",
+    "open3d",
+    "scipy",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
