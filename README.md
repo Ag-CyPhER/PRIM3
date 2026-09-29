@@ -6,7 +6,7 @@
     </a>
 </p>
 
-> This repository is the official implemetation of the paper **PRIM3**.
+> This repository is the official implemetation of the **PRIM3** paper.
 
 <div align=center>
 <img src='./assets/pipeline.png' width=80%>
@@ -74,7 +74,6 @@ save_centroid_pointcloud(final_instances, "centroids.ply")         # one point p
 See `examples/basic_usage.py` for a complete, runnable, synthetic example.
 
 </details>
-
 <details>
   <summary><h2>2. Download Dataset</h2></summary>
 
