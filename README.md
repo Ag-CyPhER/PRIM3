@@ -74,7 +74,7 @@ See `examples/basic_usage.py` for a complete, runnable, synthetic example.
   <summary><h2>2. Download Dataset</h2></summary>
 
 - Access our data, pod detection model weights, and results at [**Shared Google Drive Folder**](https://drive.google.com/drive/folders/18y8q1-vgHSrc7waRYEjwIZwv0EHVp9U1?usp=sharing).
-- More info about the dataset and folder structure can be found at [**docs\README.md**](docs\README.md).
+- More info about the dataset and folder structure can be found at [**docs\README.md**](docs/README.md).
 
 </details>
 
