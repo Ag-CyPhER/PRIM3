@@ -3,18 +3,17 @@
 > This repository is the official implementation of the **PRIM3** paper.
 
 <p align="center">
-
-<a href='https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7118982'> <img src="https://img.shields.io/badge/Paper-SSRN-green?style=plastic&amp;logo=SSRN&amp;logoColor=green" alt="Paper"/> </a> <a href="https://doi.org/10.5281/zenodo.23178090"> <img src="https://zenodo.org/badge/DOI/10.5281/zenodo.23178090.svg" alt="DOI"/> </a>
-
+    <a href='https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7118982'>
+      <img src="https://img.shields.io/badge/Paper-SSRN-green?style=plastic&amp;logo=SSRN&amp;logoColor=green" alt="Paper"/>
+      <img src="https://zenodo.org/badge/DOI/10.5281/zenodo.23178090.svg" alt="DOI"/>
+    </a>
 </p>
 
-::: {align="center"}
-<img src="./assets/pipeline.png" width="80%"/>
-:::
+<div align=center>
+    <img src='./assets/pipeline.png' width=90%>
+</div>
 
 ## Project Roadmap
-
-We will update this repository with data and code for reproducibility of our work:
 
 -   [x] **PIMM Implementation Code** - *Released \[09/29/2026\]*
 -   [x] **Dataset** - *Released* *\[10/07/2026\]*
@@ -22,16 +21,7 @@ We will update this repository with data and code for reproducibility of our wor
 -   [ ] **Complete PRIM3 Pipeline** - *Coming Soon*
 
 <details>
-
-<summary>
-
-<h2>
-
-1.  PIMM — Pod Instance Matching Module
-
-    </h2>
-
-    </summary>
+  <summary><h2>1. PIMM — Pod Instance Matching Module</h2></summary>
 
 PIMM is used for tracking and merging 3D object instances across a sequence of frames, using symmetric point-cloud overlap matching. It requires 2D-3D segmented/projected objects for each frame.
 
@@ -81,20 +71,11 @@ See `examples/basic_usage.py` for a complete, runnable, synthetic example.
 </details>
 
 <details>
-
-<summary>
-
-<h2>
-
-2.  Download Dataset
-
-    </h2>
-
-    </summary>
+  <summary><h2>2. Download Dataset</h2></summary>
 
 To reproduce our evaluation counting results and to access our data, trained pod detection model weights, RGB scene point clouds, ground truth data, depth maps and results, please visit the following link.
 
-Link: ![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23178090.svg){width="147" height="15"}
+Link: ![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23178090.svg)
 
 More info about the dataset and folder structure can be found [here](docs\README.md)
 
@@ -104,8 +85,8 @@ More info about the dataset and folder structure can be found [here](docs\README
 
 Our work builds upon **Ultralytics YOLO**, **Segment Anything Model (SAM) 2**, and **Gaussian Opacity Fields**. We highly appreciate the authors for their excellent work:
 
+-   [**Ultralytics**]()
 -   [**SAM 2: Segment Anything in Images and Videos**](https://github.com/facebookresearch/sam2)
-
 -   [**Gaussian Opacity Fields: Efficient Adaptive Surface Reconstruction in Unbounded Scenes**](https://github.com/autonomousvision/gaussian-opacity-fields) \[SIGGRAPH ASIA 2024\]
 
 ## License
@@ -114,13 +95,13 @@ See the [LICENSE](LICENSE) file for details.
 
 ## Citation
 
-If you find this repo useful, please cite the PRIM3 paper (currently in Review):
+If you find this repo useful, please cite the PRIM3 paper:
 
 ``` bibtex
 @article{Reddy_PRIM3,
   title   = {PRIM3: Pod Reconstruction and Instance Matching in 3D for Lima Bean Pod Counting and Yield Assessment},
   author  = {Mulaka, Ashish Reddy and Ernest, Emmalea G and Hampton, Ekaterina D and Huang, Guoquan and Bao, Yin},
-  journal = {Computers and Electronics in Agriculture [Preprint] (https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7118982)}
+  journal = {Computers and Electronics in Agriculture Preprint https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7118982}
   year    = {2026}
 }
 ```
