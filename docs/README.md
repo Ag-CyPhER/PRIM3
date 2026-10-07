@@ -1,206 +1,95 @@
-# Dataset and Results Folder Structure
+# PRIM3 Dataset and Results
+
+The [Google drive folder](https://drive.google.com/drive/folders/18y8q1-vgHSrc7waRYEjwIZwv0EHVp9U1?usp=sharing) contains the PRIM3 datasets and results as zip files inside `plant_level/` and `plot_level/`. Unzip all files of one dataset into a single folder named `plant_level/` or `plot_level/` to get the folder structure shown below.
+
+| File (`plant_level_…` / `plot_level_…`) | Unzips to | Contents | Size (plant / plot) |
+|---|---|---|---|
+| `…_dataset.zip` | `dataset/` | images, COLMAP sparse model, depth maps | 8.5 / 28.5 GB |
+| `…_output.zip` | `output/` | PRIM3 predictions | 0.7 / 2.3 GB |
+| `…_ground_truth.zip` | `ground_truth/` | GT pod centroids | 21 KB / 245 KB |
+| `…_scene_rgb_pointcloud.zip` | `scene_rgb_pointcloud/` | RGB point cloud of each scene | 0.5 / 3.1 GB |
+| `plant_level.pt`, `plot_level.pt` | – | model weights, one per dataset | – |
+
+`output` and `ground_truth` are enough to score the predictions.
+
+Each sample has a capture ID `<SAMPLE>` (`IMG_NNNN`). The same ID names the sample's folder or file everywhere, so everything that belongs to one sample is found by that ID. Samples are divided into three splits:
+
+- `calibration`: samples used to find the baseline thresholds for the PRIM3 pipeline.
+- `evaluation`: samples used to evaluate the PRIM3 pipeline performance against ground truth pod centroids.
+- `unseen`: additional samples with predictions only. Their images, sparse models and depth maps will be released separately soon.
 
 <details>
-  <summary><h1>1. Plant-level Dataset</h1></summary>
+<summary><h2>1. Plant-level dataset</h2></summary>
 
-There are 24 plots (samples) in this dataset and are split into `calibration` (4 plots) and `evaluation` (20 plots). `output/unseen` holds predictions for 260 further plots whose inputs (images, sparse model, depth maps) are not part of this release yet; they will be released soon separately.
+- This dataset contains 24 samples: 4 `calibration` (IMG_4274, IMG_4364, IMG_4458, IMG_4503) and 20 `evaluation`. 
+- Two evaluation samples, `IMG_4266` and `IMG_4289`, are not used in the yield assessment because their measured yield is not accurate.
+- `output/unseen` holds predictions for 260 further samples.
 
-## Folder structure
 
-```         
+```
 plant_level/
-  dataset/                       inputs: the 24 plots
-    calibration/<PLOT>/          IMG_4274, IMG_4364, IMG_4458, IMG_4503
-    evaluation/<PLOT>/           the other 20 plots (two of these are excluded from Yield assessment, due to inaccuracies)
-      images/                    <PLOT>_NNNN.png        original file names
-      sparse/                    cameras.txt  images.txt  points3D.txt   (COLMAP Sparse Reconstruction)
-      depth/depth_maps.npz       one (H, W) float32 depth array per frame
-  output/                        PRIM3 pipeline predictions
-    calibration/<PLOT>/          4 plots
-    evaluation/<PLOT>/           20 plots
-    unseen/<PLOT>/               260 plots (no inputs in this release)
-      centroids_<PLOT>.ply       predicted pod centroids
-      pods_labeled_<PLOT>.ply    predicted pod point clouds, one label per pod
+  dataset/<calibration|evaluation>/<SAMPLE>/       24 samples
+    images/                    <SAMPLE>_NNNN.png        original file names
+    sparse/                    cameras.txt  images.txt  points3D.txt   (COLMAP sparse model)
+    depth/depth_maps.npz       one (H, W) float32 depth array per frame
+  output/<calibration|evaluation|unseen>/<SAMPLE>/ 4 + 20 + 260 samples
+    centroids_<SAMPLE>.ply     predicted pod centroids
+    pods_labeled_<SAMPLE>.ply  predicted pod point clouds, one label per pod
   ground_truth/
-    gt_centroids_<PLOT>.ply      GT pod centroids for 24 plots
+    gt_centroids_<SAMPLE>.ply  GT pod centroids (24 samples)
   scene_rgb_pointcloud/
-    <PLOT>.ply                   RGB point cloud of the scene for 24 plots
+    <SAMPLE>.ply               RGB point cloud of the scene (24 samples)
 ```
-
-## Naming conventions
-
--   `<PLOT>` is the capture ID, `IMG_NNNN`. The same ID names the plot folder or file in every top-level
-    folder, so everything that belongs to one plot is found by that ID.
--   Split folders are `calibration` and `evaluation` (in `dataset/` and `output/`) and `unseen` (in `output/` only).
--   File name patterns:
-
-| folder                           | file name                 | one per                                  |
-|----------------------------------|---------------------------|------------------------------------------|
-| `dataset/<split>/<PLOT>/images/` | `<PLOT>_NNNN.png`         | frame                                    |
-| `output/<split>/<PLOT>/`         | `centroids_<PLOT>.ply`    | plot (calibration, evaluation, unseen)   |
-| `output/<split>/<PLOT>/`         | `pods_labeled_<PLOT>.ply` | plot (calibration, evaluation, unseen)   |
-| `ground_truth/`                  | `gt_centroids_<PLOT>.ply` | plot (calibration, evaluation)           |
-| `scene_rgb_pointcloud/`          | `<PLOT>.ply`              | plot (calibration, evaluation)           |
-
-
-
-## sparse/ (COLMAP)
-
-COLMAP Sparse Reconstruction:
-
--   `cameras.txt`: one camera, `PINHOLE`, params `fx fy cx cy`, 960 x 539.
--   `images.txt`: two lines per image. Line 1 is `IMAGE_ID QW QX QY QZ TX TY TZ CAMERA_ID NAME`, line 2 the 2D keypoints `X Y POINT3D_ID ...` (`-1` when the point has no 3D point in this subset).
--   `points3D.txt`: `POINT3D_ID X Y Z R G B ERROR TRACK[]`. Tracks keep only images in the subset; points left with no track are dropped.
-
-Pose convention (standard COLMAP): world -\> camera, `X_cam = R(q) @ X_world + t`, quaternion order `w x y z`.
-
-
-## depth/depth_maps.npz
-
-One array per frame, key = the image file name.
-
--   shape `(H, W)`, dtype `float32`
--   value = camera-space **z**
--   `0` = no depth value
--   units = the units of the sparse model (COLMAP scene units)
-
-
-Back-projection of pixel `(u, v)` with depth `z`:
-
-```         
-X_cam   = ((u - cx) * z / fx,  (v - cy) * z / fy,  z)
-X_world = R.T @ (X_cam - t)
-```
-
-Depth loading Example:
-
-``` python
-import numpy as np
-depth = np.load("depth/depth_maps.npz")
-d = depth["IMG_4503_0041.png"]
-```
-
-## output/
-
-Predictions of the PRIM3 pipeline. Each plot folder holds two point cloud (PLY) files and `ground_truth/`:
-
--   `centroids_<PLOT>.ply`: one point (`float x y z`) per predicted pod.
--   `pods_labeled_<PLOT>.ply`: the points of the predicted pods: `float x y z`, `uchar red green blue` and `int labels`. Every point carries the label of the pod it belongs to.
-
-## ground_truth/
-
-Ground-truth pod centroids, one file per calibration/evaluation plot: `gt_centroids_<PLOT>.ply` (PLY, `float x y z`), one point per annotated pod.
-
-## scene_rgb_pointcloud/
-
-One RGB point cloud of the scene per calibration or evaluation plot: `<PLOT>.ply` (`float x y z`, `float nx ny nz`, `uchar red green blue`) and `output/`, for viewing the ground truth and the predictions on the scene.
-
-
 
 </details>
 
-
 <details>
-  <summary><h1>2. Plot-level Dataset</h1></summary>
+<summary><h2>2. Plot-level dataset</h2></summary>
 
-The 58 samples are split into `calibration` (4 samples) and `evaluation` (54 samples). `output/unseen` holds predictions for 100 further samples whose inputs (images, sparse model, depth maps) are not part of this release yet; they will be released separately soon.
-
-## Folder structure
+- This dataset 58 samples: 4 `calibration` (IMG_3544, IMG_3635, IMG_3707, IMG_3709) and 54 `evaluation`. 
+- `output/unseen` holds predictions for 100 further samples.
 
 ```
 plot_level/
-  dataset/                       inputs: 58 samples
-    calibration/<SAMPLE>/        IMG_3544, IMG_3635, IMG_3707, IMG_3709
-    evaluation/<SAMPLE>/         the other 54 samples
-      images/                    <SAMPLE>_NNNN.png        original file names
-      sparse/                    cameras.txt  images.txt  points3D.txt   (COLMAP Sparse model)
-      depth/depth_maps.npz       one (H, W) float32 depth array per frame
-  output/                        PRIM3 pipeline predictions
-    calibration/<SAMPLE>/        4 samples
-    evaluation/<SAMPLE>/         54 samples
-    unseen/<SAMPLE>/             100 samples (no inputs or ground truth in this release)
-      centroids_<SAMPLE>.ply     predicted pod centroids
-      pods_labeled_<SAMPLE>.ply  predicted pod point clouds, one label per pod
+  dataset/<calibration|evaluation>/<SAMPLE>/       58 samples
+    images/                    <SAMPLE>_NNNN.png        original file names
+    sparse/                    cameras.txt  images.txt  points3D.txt   (COLMAP sparse model)
+    depth/depth_maps.npz       one (H, W) float32 depth array per frame
+  output/<calibration|evaluation|unseen>/<SAMPLE>/ 4 + 54 + 100 samples
+    centroids_<SAMPLE>.ply     predicted pod centroids
+    pods_labeled_<SAMPLE>.ply  predicted pod point clouds, one label per pod
   ground_truth/
-    gt_centroids_<SAMPLE>.ply    GT pod centroids for 58 samples
+    gt_centroids_<SAMPLE>.ply  GT pod centroids (58 samples)
   scene_rgb_pointcloud/
-    <SAMPLE>.ply                 RGB point cloud of the scene (the 58 calibration and evaluation samples)
+    <SAMPLE>.ply               RGB point cloud of the scene (58 samples)
 ```
 
+</details>
 
-## Naming conventions
+<details>
+<summary><h2>3. Data formats (both datasets)</h2></summary>
 
--   `<SAMPLE>` is the capture ID, `IMG_NNNN`. The same ID names the sample folder or file in every top-level
-    folder, so everything that belongs to one sample is found by that ID.
--   Split folders are `calibration` and `evaluation` (in `dataset/` and `output/`) and `unseen` (in `output/` only).
--   File name patterns:
+### PLY files
 
-| folder                             | file name                   | one per                                  |
-|------------------------------------|-----------------------------|------------------------------------------|
-| `dataset/<split>/<SAMPLE>/images/` | `<SAMPLE>_NNNN.png`         | frame                                    |
-| `output/<split>/<SAMPLE>/`         | `centroids_<SAMPLE>.ply`    | sample (calibration, evaluation, unseen) |
-| `output/<split>/<SAMPLE>/`         | `pods_labeled_<SAMPLE>.ply` | sample (calibration, evaluation, unseen) |
-| `ground_truth/`                    | `gt_centroids_<SAMPLE>.ply` | sample (calibration, evaluation)         |
-| `scene_rgb_pointcloud/`            | `<SAMPLE>.ply`              | sample (calibration, evaluation)         |
+| File | Properties |
+|---|---|
+| `centroids_<SAMPLE>.ply`, `gt_centroids_<SAMPLE>.ply` | `float x y z`, one point per predicted / annotated pod |
+| `pods_labeled_<SAMPLE>.ply` | `float x y z`, `uchar red green blue`, `int labels`. Every point carries the label of the pod it belongs to; labels are pod IDs. |
+| `<SAMPLE>.ply` (`scene_rgb_pointcloud/`) | `float x y z`, `float nx ny nz`, `uchar red green blue` |
 
+### sparse/
 
+- `cameras.txt`: one camera, `PINHOLE`, params `fx fy cx cy`, with the image size of that sample.
+- `images.txt`: two lines per image. Line 1 is `IMAGE_ID QW QX QY QZ TX TY TZ CAMERA_ID NAME`, line 2 the 2D keypoints `X Y POINT3D_ID ...` (`-1` when the keypoint has no 3D point).
+- `points3D.txt`: `POINT3D_ID X Y Z R G B ERROR TRACK[]`.
 
-## sparse/ (COLMAP)
+### depth/depth_maps.npz
 
-COLMAP Sparse Reconstruction:
+One array per frame, key = the image file name (e.g. `IMG_4503_0041.png`).
 
--   `cameras.txt`: one camera, `PINHOLE`, params `fx fy cx cy`, with the image size of that sample.
--   `images.txt`: two lines per image. Line 1 is `IMAGE_ID QW QX QY QZ TX TY TZ CAMERA_ID NAME`, line 2 the 2D keypoints `X Y POINT3D_ID ...` (`-1` when the keypoint has no 3D point).
--   `points3D.txt`: `POINT3D_ID X Y Z R G B ERROR TRACK[]`.
-
-Pose convention (standard COLMAP): world -> camera, `X_cam = R(q) @ X_world + t`, quaternion order `w x y z`.
-
-## depth/depth_maps.npz
-
-One array per frame, key = the image file name, e.g. `IMG_3635_0000.png`.
-
--   shape `(H, W)` equal to the image size of the sample, dtype `float32`
--   value = camera-space **z**
--   `0` = no depth, never NaN or inf
--   units = the units of the sparse model (COLMAP scene units)
-
-The values are COLMAP geometric depth.
-
-Back-projection of pixel `(u, v)` with depth `z`:
-
-```
-X_cam   = ((u - cx) * z / fx,  (v - cy) * z / fy,  z)
-X_world = R.T @ (X_cam - t)
-```
-
-Depth loading Example:
-
-``` python
-import numpy as np
-depth = np.load("depth/depth_maps.npz")
-d = depth["IMG_3635_0000.png"]          # (H, W) float32
-```
-
-## output/
-
-Predictions of the PRIM3 pipeline. Each sample folder holds two point cloud (PLY) files, in the same
-world coordinates as the sparse model and `ground_truth/`:
-
--   `centroids_<SAMPLE>.ply`: one point (`float x y z`) per predicted pod.
--   `pods_labeled_<SAMPLE>.ply`: the points of the predicted pods: `float x y z`, `uchar red green blue` and
-    `int labels`. Every point carries the label of the pod it belongs to; labels are pod IDs and are not
-    necessarily consecutive.
-
-## ground_truth/
-
-Ground-truth pod centroids, one file per calibration or evaluation sample: `gt_centroids_<SAMPLE>.ply` (binary
-little-endian PLY, `float x y z`), one point per annotated pod, in the same world coordinates as the sparse model.
-
-## scene_rgb_pointcloud/
-
-One RGB point cloud of the scene per calibration or evaluation sample: `<SAMPLE>.ply` (binary little-endian PLY,
-`float x y z`, `float nx ny nz`, `uchar red green blue`), in the same world coordinates as `ground_truth/` and
-`output/`, for viewing the ground truth and the predictions on the scene.
-
+- shape `(H, W)` equal to the image size of the sample, dtype `float32`
+- value = camera-space **z**
+- `0` = no depth
+- units = the COLMAP sparse reconstruction units
 
 </details>

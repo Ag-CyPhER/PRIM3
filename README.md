@@ -5,8 +5,8 @@
 <p align="center">
     <a href='https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7118982'>
       <img src="https://img.shields.io/badge/Paper-SSRN-green?style=plastic&amp;logo=SSRN&amp;logoColor=green" alt="Paper"/>
-      <img src="https://zenodo.org/badge/DOI/10.5281/zenodo.23178090.svg" alt="DOI"/>
     </a>
+
 </p>
 
 <div align=center>
@@ -73,19 +73,16 @@ See `examples/basic_usage.py` for a complete, runnable, synthetic example.
 <details>
   <summary><h2>2. Download Dataset</h2></summary>
 
-To reproduce our evaluation counting results and to access our data, trained pod detection model weights, RGB scene point clouds, ground truth data, depth maps and results, please visit the following link.
+To access our data, pod detection model weights, and results, please visit the following link. More info about the dataset and folder structure can be found [here](docs\README.md).
 
-Link: ![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23178090.svg)
-
-More info about the dataset and folder structure can be found [here](docs\README.md)
+Link: [**Shared Google Drive Folder**](https://drive.google.com/drive/folders/18y8q1-vgHSrc7waRYEjwIZwv0EHVp9U1?usp=sharing)
 
 </details>
 
 ## Acknowledgements
 
-Our work builds upon **Ultralytics YOLO**, **Segment Anything Model (SAM) 2**, and **Gaussian Opacity Fields**. We highly appreciate the authors for their excellent work:
+Our work builds upon **Segment Anything Model (SAM) 2** and **Gaussian Opacity Fields**. We highly appreciate the authors for their excellent work:
 
--   [**Ultralytics**]()
 -   [**SAM 2: Segment Anything in Images and Videos**](https://github.com/facebookresearch/sam2)
 -   [**Gaussian Opacity Fields: Efficient Adaptive Surface Reconstruction in Unbounded Scenes**](https://github.com/autonomousvision/gaussian-opacity-fields) \[SIGGRAPH ASIA 2024\]
 
