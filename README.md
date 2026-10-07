@@ -74,7 +74,7 @@ See `examples/basic_usage.py` for a complete, runnable, synthetic example.
   <summary><h2>2. Download Dataset</h2></summary>
 
 - Access our data, pod detection model weights, and results at [**Shared Google Drive Folder**](https://drive.google.com/drive/folders/18y8q1-vgHSrc7waRYEjwIZwv0EHVp9U1?usp=sharing).
-- More info about the dataset and folder structure can be at: [**docs\README.md**](docs\README.md).
+- More info about the dataset and folder structure can be found at [**docs\README.md**](docs\README.md).
 
 </details>
 
@@ -97,7 +97,7 @@ If you find this repo useful, please cite the PRIM3 paper:
 @article{Reddy_PRIM3,
   title   = {PRIM3: Pod Reconstruction and Instance Matching in 3D for Lima Bean Pod Counting and Yield Assessment},
   author  = {Mulaka, Ashish Reddy and Ernest, Emmalea G and Hampton, Ekaterina D and Huang, Guoquan and Bao, Yin},
-  journal = {Computers and Electronics in Agriculture Preprint https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7118982},
+  journal = {Computers and Electronics in Agriculture},
   year    = {2026}
 }
 ```
