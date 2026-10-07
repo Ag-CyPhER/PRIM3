@@ -1,52 +1,57 @@
 # PRIM3: Pod Reconstruction and Instance Matching in 3D for Lima Bean Pod Counting and Yield Assessment
 
+> This repository is the official implementation of the **PRIM3** paper.
+
 <p align="center">
-    <a href='https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7118982'>
-      <img src='https://img.shields.io/badge/Paper-SSRN-green?style=plastic&logo=SSRN&logoColor=green' alt='Paper'>
-    </a>
+
+<a href='https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7118982'> <img src="https://img.shields.io/badge/Paper-SSRN-green?style=plastic&amp;logo=SSRN&amp;logoColor=green" alt="Paper"/> </a> <a href="https://doi.org/10.5281/zenodo.23178090"> <img src="https://zenodo.org/badge/DOI/10.5281/zenodo.23178090.svg" alt="DOI"/> </a>
+
 </p>
 
-> This repository is the official implemetation of the **PRIM3** paper.
-
-<div align=center>
-<img src='./assets/pipeline.png' width=80%>
-</div>
-
+::: {align="center"}
+<img src="./assets/pipeline.png" width="80%"/>
+:::
 
 ## Project Roadmap
 
 We will update this repository with data and code for reproducibility of our work:
 
-- [x] **PIMM Implementation Code** (Available)
-- [x] **Dataset** and **Results**(Available)
-- [ ] **Complete PRIM3 Pipeline** (Coming Soon)
-- [ ] **Evaluation Results** (Coming Soon)
+-   [x] **PIMM Implementation Code** - *Released \[09/29/2026\]*
+-   [x] **Dataset** - *Released* *\[10/07/2026\]*
+-   [x] **Overall Results** - *Released* *\[10/07/2026\]*
+-   [ ] **Complete PRIM3 Pipeline** - *Coming Soon*
 
 <details>
-  <summary><h2>1. PIMM — Pod Instance Matching Module</h2></summary>
 
+<summary>
 
-PIMM is used for tracking and merging 3D object instances
-across a sequence of frames, using symmetric point-cloud overlap matching. It requires 2D-3D segmented/projected objects for each frame.
+<h2>
 
+1.  PIMM — Pod Instance Matching Module
+
+    </h2>
+
+    </summary>
+
+PIMM is used for tracking and merging 3D object instances across a sequence of frames, using symmetric point-cloud overlap matching. It requires 2D-3D segmented/projected objects for each frame.
 
 ### PIMM consists of three stages:
 
-1. **`preprocessing`**: Statistical outlier removal and DBSCAN-based clustering (to remove any noise), and an optional voxel downsampling.
-2. **`Symmetric Overlap (matching)`**: Pairwise similarity between point clouds, resolved via the Hungarian algorithm for globally optimal one-to-one assignment between two sets of pod point clouds. Two interchangeable metrics, either usable as the main frame-to-frame matching strategy: symmetric overlap score (`match_by_overlap`, two parameters -- distance and score) and Chamfer-L2 distance (`match_by_chamfer`, one parameter -- chamfer ).
-3. **`tracker`** (`PodTracker`) and **`management`**: The frame-by-frame tracking loop matches each frame's pod point clouds against existing tracks using matching method (`matching_method="overlap"` or `"chamfer"`) - based on provided matching crieteria it merges matches, starts new tracks for any new and unmatched instances, and carries forward existing tracks that went unmatched this frame. `management` handles keeping a merged track's point count bounded via farthest point sampling (FPS) as it accumulates incoming object point clouds across many frames.
+1.  **`preprocessing`**: Statistical outlier removal and DBSCAN-based clustering (to remove any noise), and an optional voxel downsampling.
+2.  **`Symmetric Overlap (matching)`**: Pairwise similarity between point clouds, resolved via the Hungarian algorithm for globally optimal one-to-one assignment between two sets of pod point clouds. Two interchangeable metrics, either usable as the main frame-to-frame matching strategy: symmetric overlap score (`match_by_overlap`, two parameters -- distance and score) and Chamfer-L2 distance (`match_by_chamfer`, one parameter -- chamfer ).
+3.  **`tracker`** (`PodTracker`) and **`management`**: The frame-by-frame tracking loop matches each frame's pod point clouds against existing tracks using matching method (`matching_method="overlap"` or `"chamfer"`) - based on provided matching crieteria it merges matches, starts new tracks for any new and unmatched instances, and carries forward existing tracks that went unmatched this frame. `management` handles keeping a merged track's point count bounded via farthest point sampling (FPS) as it accumulates incoming object point clouds across many frames.
 
 ## Install
 
-```bash
+``` bash
 pip install -e .
 ```
 
-Requires Python >= 3.9, `numpy`, `open3d`, `scipy`.
+Requires Python \>= 3.9, `numpy`, `open3d`, `scipy`.
 
 ## Quick usage
 
-```python
+``` python
 from pimm import PointCloudPreprocessor, PodTracker
 
 # frames: list of frames, each frame (item) is a list of projected pod pointclouds (o3d.geometry.PointCloud), Coordinate System: Camera Frame .
@@ -74,42 +79,48 @@ save_centroid_pointcloud(final_instances, "centroids.ply")         # one point p
 See `examples/basic_usage.py` for a complete, runnable, synthetic example.
 
 </details>
+
 <details>
-  <summary><h2>2. Download Dataset</h2></summary>
 
-Please look into this [README.md](docs\README.md)
-To reproduce our counting results you can download the trained model weights, 3DGS extracted point clouds and depth maps for every sample. 
+<summary>
 
-Download can be found here: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23178090.svg)](https://doi.org/10.5281/zenodo.23178090)
+<h2>
+
+2.  Download Dataset
+
+    </h2>
+
+    </summary>
+
+To reproduce our evaluation counting results and to access our data, trained pod detection model weights, RGB scene point clouds, ground truth data, depth maps and results, please visit the following link.
+
+Link: ![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23178090.svg){width="147" height="15"}
+
+More info about the dataset and folder structure can be found [here](docs\README.md)
 
 </details>
-
 
 ## Acknowledgements
 
 Our work builds upon **Ultralytics YOLO**, **Segment Anything Model (SAM) 2**, and **Gaussian Opacity Fields**. We highly appreciate the authors for their excellent work:
 
+-   [**SAM 2: Segment Anything in Images and Videos**](https://github.com/facebookresearch/sam2)
 
-* [**SAM 2: Segment Anything in Images and Videos**](https://github.com/facebookresearch/sam2)
-
-* [SIGGRAPH ASIA 2024] [**Gaussian Opacity Fields: Efficient Adaptive Surface Reconstruction in Unbounded Scenes**](https://github.com/autonomousvision/gaussian-opacity-fields)
-
-
-
+-   [**Gaussian Opacity Fields: Efficient Adaptive Surface Reconstruction in Unbounded Scenes**](https://github.com/autonomousvision/gaussian-opacity-fields) \[SIGGRAPH ASIA 2024\]
 
 ## License
 
 See the [LICENSE](LICENSE) file for details.
 
-
 ## Citation
 
-If you use PIMM, please cite the PRIM3 paper:
+If you find this repo useful, please cite the PRIM3 paper (currently in Review):
 
-```bibtex
+``` bibtex
 @article{Reddy_PRIM3,
   title   = {PRIM3: Pod Reconstruction and Instance Matching in 3D for Lima Bean Pod Counting and Yield Assessment},
   author  = {Mulaka, Ashish Reddy and Ernest, Emmalea G and Hampton, Ekaterina D and Huang, Guoquan and Bao, Yin},
+  journal = {Computers and Electronics in Agriculture [Preprint] (https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7118982)}
   year    = {2026}
 }
 ```
