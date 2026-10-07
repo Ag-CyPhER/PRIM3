@@ -18,7 +18,7 @@
 We will update this repository with data and code for reproducibility of our work:
 
 - [x] **PIMM Implementation Code** (Available)
-- [ ] **Dataset** (Coming Soon)
+- [x] **Dataset** and **Results**(Available)
 - [ ] **Complete PRIM3 Pipeline** (Coming Soon)
 - [ ] **Evaluation Results** (Coming Soon)
 
@@ -77,17 +77,24 @@ See `examples/basic_usage.py` for a complete, runnable, synthetic example.
 <details>
   <summary><h2>2. Download Dataset</h2></summary>
 
-To reproduce our counting results you can download the trained model weights, 3DGS extracted point clouds and depth maps for every sample. Download can be found here: TBD.
+Please look into this [README.md](docs\README.md)
+To reproduce our counting results you can download the trained model weights, 3DGS extracted point clouds and depth maps for every sample. 
+
+Download can be found here: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23178090.svg)](https://doi.org/10.5281/zenodo.23178090)
 
 </details>
 
 
 ## Acknowledgements
 
-Our work builds upon **Gaussian Opacity Fields**. We highly appreciate the authors for their excellent work:
+Our work builds upon **Ultralytics YOLO**, **Segment Anything Model (SAM) 2**, and **Gaussian Opacity Fields**. We highly appreciate the authors for their excellent work:
 
 
-[SIGGRAPH ASIA 2024] [**Gaussian Opacity Fields: Efficient Adaptive Surface Reconstruction in Unbounded Scenes**](https://github.com/autonomousvision/gaussian-opacity-fields)
+* [**SAM 2: Segment Anything in Images and Videos**](https://github.com/facebookresearch/sam2)
+
+* [SIGGRAPH ASIA 2024] [**Gaussian Opacity Fields: Efficient Adaptive Surface Reconstruction in Unbounded Scenes**](https://github.com/autonomousvision/gaussian-opacity-fields)
+
+
 
 
 ## License
